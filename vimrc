@@ -27,7 +27,7 @@
 packadd minpac
 call minpac#init()
 "for trick beneath https://github.com/dhruvasagar/dotfiles/blob/master/vim/vimrc
-let g:vim_home = get(g:, 'vim_home', expand('~/dotfiles1/vim/'))
+let g:vim_home = get(g:, 'vim_home', expand('~/dotfiles/vim/'))
 exec 'source' g:vim_home.'/packages.vim'
 " Load all vim configs {{{1
 let config_list = [
