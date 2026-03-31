@@ -36,6 +36,11 @@ DISABLE_AUTO_UPDATE="true"
 
 #source $ZSH/oh-my-zsh.sh
 
+# Prompt matching bash style: ┌─[user @ host]─[path]─[time]  └─[$]›
+autoload -U colors && colors
+setopt PROMPT_SUBST
+PROMPT=$'\n%F{cyan}┌─[%f%B%F{yellow}%n%f%b%B%F{cyan} @ %f%b%B%F{yellow}%m%f%b%F{cyan}]─[%f%B%F{blue}%~%f%b%F{cyan}]─[%f%F{red}%*%f%F{cyan}]%f\n%F{cyan}└─[%f%B%F{white}%#%f%b%F{cyan}]› %f'
+
 # Put any proprietary or private functions/values in ~/.private, and this will source them
 if [ -f $HOME/.private ]; then
     source $HOME/.private
