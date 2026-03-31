@@ -24,8 +24,6 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " PACKAGE MANAGMENT
-packadd minpac
-call minpac#init()
 "for trick beneath https://github.com/dhruvasagar/dotfiles/blob/master/vim/vimrc
 let g:vim_home = get(g:, 'vim_home', expand('~/dotfiles/vim/'))
 exec 'source' g:vim_home.'/packages.vim'
@@ -303,8 +301,6 @@ au BufNewFile,BufRead *.js, *.html, *.css
     \ set tabstop=2
     \ set softtabstop=2
     \ set shiftwidth=2
-
-call minpac#add('vim-scripts/indentpython.vim')
 
 "Flagging unnecessary whitespace
 "highlight BadWhitespace ctermbg=red guibg=red
