@@ -13,6 +13,11 @@
 ##############################################################################
 # 01. General                                                                #
 ##############################################################################
+# Clear terminal title inside tmux so hostname doesn't appear in pane border
+if [ -n "$TMUX" ]; then
+    PROMPT_COMMAND='printf "\033]0;\007"'
+fi
+
 # Shell prompt
 export PS1="\n\[\e[0;36m\]┌─[\[\e[0m\]\[\e[1;33m\]\u\[\e[0m\]\[\e[1;36m\] @ \[\e[0m\]\[\e[1;33m\]\h\[\e[0m\]\[\e[0;36m\]]─[\[\e[0m\]\[\e[1;34m\]\w\[\e[0m\]\[\e[0;36m\]]\[\e[0;36m\]─[\[\e[0m\]\[\e[0;31m\]\t\[\e[0m\]\[\e[0;36m\]]\[\e[0m\]\n\[\e[0;36m\]└─[\[\e[0m\]\[\e[1;37m\]\$\[\e[0m\]\[\e[0;36m\]]› \[\e[0m\]"
 # If fortune is installed, run a fortune
@@ -68,8 +73,9 @@ export PATH=~/bin:$PATH
 # But I do agree that the command to set it up looks a bit crazy.
 #export PS1='\[\e]0;\w\a\]\n\[\e[32m\]\u@\h \[\e[33m\]\w\[\e[0m\]\n\$ '
 
-# This is necessary for the sort to work correctly.
-export LC_ALL=C
+# LC_COLLATE=C keeps sort behavior correct without breaking UTF-8 rendering.
+export LC_COLLATE=C
+export LC_ALL=en_GB.UTF-8
 
 # This is used on macOS to turn off zsh warning.
 export BASH_SILENCE_DEPRECATION_WARNING=1
