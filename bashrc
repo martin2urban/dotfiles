@@ -102,7 +102,7 @@ set -o vi
 
 #for python virtual environments
 alias ae='deactivate &> /dev/null; source ./venv/bin/activate'
-alias de= 'deactivate'
+alias de='deactivate'
 
 #
 # A minimal BASH profile.
@@ -131,3 +131,39 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/miniconda3/bin:$PATH"
+if [ -z "$SSH_AUTH_SOCK" ]; then
+      eval "$(ssh-agent -s)" > /dev/null
+      ssh-add ~/.ssh/id_ed25519 2>/dev/null
+  fi
+
+export PATH="$PATH:/mnt/c/Users/urbanm/AppData/Local/Programs/Microsoft VS Code/bin"
+
+
+# opencode
+export PATH=/home/urbanm/.opencode/bin:$PATH
+
+# Synto LLM-wiki (Docker) — trigger from anywhere, e.g. `synto run`, `synto review`, `synto status`
+alias synto='docker compose --project-directory /mnt/d/Docker/synto -f /mnt/d/Docker/synto/compose.yml run --rm synto'
+# Synto LLM-wiki (Docker) — interactive shell inside the container (exit to leave)
+alias synto-sh='docker compose --project-directory /mnt/d/Docker/synto -f /mnt/d/Docker/synto/compose.yml run --rm -it --entrypoint bash synto'
+
+# Hermes Agent (Docker)
+# NOTE: Hermes runs as a *persistent* service container (`gateway run`), kept alive
+# by the daily --cold memory backup. We therefore exec into the running container
+# instead of `run --rm` (a 2nd stack collides on the /opt/data s6-log lock ->
+# "Resource busy"). _hermes_ensure starts it if it's down; _hermes_exec is tty-aware.
+_hermes_ensure() {
+  docker inspect -f '{{.State.Running}}' hermes 2>/dev/null | grep -q true && return 0
+  docker compose --project-directory /mnt/d/Docker/hermes -f /mnt/d/Docker/hermes/compose.yml up -d hermes
+}
+_hermes_exec() {
+  _hermes_ensure || return 1
+  if [ -t 0 ]; then docker exec -it hermes "$@"; else docker exec -i hermes "$@"; fi
+}
+# drop any stale aliases of the same name so re-sourcing doesn't break on alias expansion
+unalias hermes hermes-chat hermes-sh 2>/dev/null
+hermes()      { _hermes_exec hermes "$@"; }
+hermes-chat() { _hermes_exec hermes chat "$@"; }     # append --continue to resume last session
+hermes-sh()   { _hermes_exec bash "$@"; }            # shell inside the running container
+# Summarize a PDF (hermes papers/) into the Synto wiki
+alias summarize-paper='bash /mnt/z/OBS-BotVault/Claude-Automation/summarize-paper.sh'
